@@ -98,6 +98,27 @@ These thoughts mean STOP—you're rationalizing:
 | "This feels productive" | Undisciplined action wastes time. Skills prevent this. |
 | "I know what that means" | Knowing the concept ≠ using the skill. Invoke it. |
 
+## Skill Directory
+
+| Situation | Skill |
+|-----------|-------|
+| Starting any creative or implementation task | `brainstorming` |
+| Have approved spec, need implementation plan | `writing-plans` |
+| Have approved plan, executing in current session | `subagent-driven-development` |
+| Have approved plan, executing in separate session | `executing-plans` |
+| Resuming work from a previous session | `session-resume` |
+| Restructuring code without changing behavior | `refactoring` |
+| Implementing any feature or bugfix | `test-driven-development` |
+| Bug, test failure, unexpected behavior | `systematic-debugging` |
+| 2+ independent tasks that can run in parallel | `dispatching-parallel-agents` |
+| Need isolated workspace for feature/experiment | `using-git-worktrees` |
+| About to claim work complete | `verification-before-completion` |
+| Feature complete, preparing to merge | `finishing-a-development-branch` |
+| Requesting peer/AI code review | `requesting-code-review` |
+| Responding to code review feedback | `receiving-code-review` |
+| Spec approved, before writing implementation plan | `security-review` |
+| Creating or editing skills | `writing-skills` |
+
 ## Skill Priority
 
 When multiple skills could apply, use this order:

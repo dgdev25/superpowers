@@ -29,8 +29,9 @@ You MUST create a task for each of these items and complete them in order:
 6. **Write design doc** — save to `docs/superpowers/specs/YYYY-MM-DD-<topic>-design.md` and commit
 7. **Spec self-review** — quick inline check for placeholders, contradictions, ambiguity, scope (see below)
 8. **User reviews written spec** — ask user to review the spec file before proceeding
-9. **Extract and create ADRs** — scan approved spec for architectural decisions, offer them to the user, create selected ones (see ADR Extraction below)
-10. **Transition to implementation** — invoke writing-plans skill to create implementation plan
+9. **Security review** — offer to threat-model the spec before implementation locks in architecture (see Security Review below)
+10. **Extract and create ADRs** — scan approved spec for architectural decisions, offer them to the user, create selected ones (see ADR Extraction below)
+11. **Transition to implementation** — invoke writing-plans skill to create implementation plan
 
 ## Process Flow
 
@@ -55,10 +56,17 @@ digraph brainstorming {
     "Write design doc" -> "Spec self-review\n(fix inline)";
     "Spec self-review\n(fix inline)" -> "User reviews spec?";
     "User reviews spec?" -> "Write design doc" [label="changes requested"];
-    "User reviews spec?" -> "Extract ADR candidates" [label="approved"];
+    "User reviews spec?" -> "Offer security review" [label="approved"];
+    "Offer security review" [shape=box];
+    "Security review accepted?" [shape=diamond];
+    "Invoke security-review skill" [shape=box];
     "Extract ADR candidates" [shape=box];
     "User selects ADRs to create?" [shape=diamond];
     "Create ADRs" [shape=box];
+    "Offer security review" -> "Security review accepted?";
+    "Security review accepted?" -> "Invoke security-review skill" [label="yes"];
+    "Security review accepted?" -> "Extract ADR candidates" [label="skip"];
+    "Invoke security-review skill" -> "Extract ADR candidates";
     "Extract ADR candidates" -> "User selects ADRs to create?";
     "User selects ADRs to create?" -> "Create ADRs" [label="yes"];
     "User selects ADRs to create?" -> "Invoke writing-plans skill" [label="skip"];
@@ -132,6 +140,18 @@ After the spec review loop passes, ask the user to review the written spec befor
 > "Spec written and committed to `<path>`. Please review it and let me know if you want to make any changes before we start writing out the implementation plan."
 
 Wait for the user's response. If they request changes, make them and re-run the spec review loop. Only proceed once the user approves.
+
+**Security Review:**
+
+After spec approval, offer a security review before writing the implementation plan. This is the cheapest moment to catch architectural security flaws — before they become load-bearing code.
+
+Offer it as its own message:
+
+> "Before we write the implementation plan, I can threat-model the design — check trust boundaries, auth flow, and data handling. Worth a few minutes now vs a refactor later. Want me to?"
+
+If accepted, invoke `superpowers:security-review`. If the review surfaces a critical or high finding that requires a design change, re-run the spec approval gate before proceeding. If accepted findings are implementation constraints only (e.g., "hash passwords"), they are written into the spec and captured as tasks in writing-plans.
+
+If declined or the design has no sensitive data or auth requirements, skip and proceed to ADR extraction.
 
 **ADR Extraction:**
 
