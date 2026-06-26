@@ -29,7 +29,8 @@ You MUST create a task for each of these items and complete them in order:
 6. **Write design doc** — save to `docs/superpowers/specs/YYYY-MM-DD-<topic>-design.md` and commit
 7. **Spec self-review** — quick inline check for placeholders, contradictions, ambiguity, scope (see below)
 8. **User reviews written spec** — ask user to review the spec file before proceeding
-9. **Transition to implementation** — invoke writing-plans skill to create implementation plan
+9. **Extract and create ADRs** — scan approved spec for architectural decisions, offer them to the user, create selected ones (see ADR Extraction below)
+10. **Transition to implementation** — invoke writing-plans skill to create implementation plan
 
 ## Process Flow
 
@@ -54,7 +55,14 @@ digraph brainstorming {
     "Write design doc" -> "Spec self-review\n(fix inline)";
     "Spec self-review\n(fix inline)" -> "User reviews spec?";
     "User reviews spec?" -> "Write design doc" [label="changes requested"];
-    "User reviews spec?" -> "Invoke writing-plans skill" [label="approved"];
+    "User reviews spec?" -> "Extract ADR candidates" [label="approved"];
+    "Extract ADR candidates" [shape=box];
+    "User selects ADRs to create?" [shape=diamond];
+    "Create ADRs" [shape=box];
+    "Extract ADR candidates" -> "User selects ADRs to create?";
+    "User selects ADRs to create?" -> "Create ADRs" [label="yes"];
+    "User selects ADRs to create?" -> "Invoke writing-plans skill" [label="skip"];
+    "Create ADRs" -> "Invoke writing-plans skill";
 }
 ```
 
@@ -124,6 +132,32 @@ After the spec review loop passes, ask the user to review the written spec befor
 > "Spec written and committed to `<path>`. Please review it and let me know if you want to make any changes before we start writing out the implementation plan."
 
 Wait for the user's response. If they request changes, make them and re-run the spec review loop. Only proceed once the user approves.
+
+**ADR Extraction:**
+
+After spec approval, scan the spec document for architectural decisions — choices where alternatives existed and a specific option was selected for explicit reasons. These are the things worth capturing as ADRs.
+
+What qualifies as a decision:
+- Technology or library choices with trade-offs ("use Postgres over SQLite because...")
+- Architectural patterns selected ("event-driven over request-response because...")
+- Explicit constraint decisions ("no external dependencies because...")
+- Data model choices that have long-term implications
+
+What does NOT qualify:
+- Exploratory discussion that was rejected
+- Implementation details with no real alternatives
+- "TBD" items or deferred choices
+
+Present candidates as a numbered list — one sentence each:
+
+> "I found 3 architectural decisions in the spec. Would you like ADRs for any of these?
+> 1. Use PostgreSQL over SQLite (multi-tenancy, concurrent writes)
+> 2. Event-driven architecture over direct service calls (decoupling, auditability)
+> 3. JWT stateless auth over sessions (horizontal scaling)
+>
+> Reply with numbers to create (e.g. '1 3'), 'all', or 'skip'."
+
+On confirmation, invoke `ruflo-adr:adr-create` for each selected decision, passing the title, context, decision, and alternatives from the spec. If `ruflo-adr` is not available, write ADR files manually to `docs/decisions/NNNN-<slug>.md` using the MADR format (Status / Context / Decision / Consequences).
 
 **Implementation:**
 
