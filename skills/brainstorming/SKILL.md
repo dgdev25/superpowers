@@ -127,12 +127,21 @@ digraph brainstorming {
 **Spec Self-Review:**
 After writing the spec document, look at it with fresh eyes:
 
-1. **Placeholder scan:** Any "TBD", "TODO", incomplete sections, or vague requirements? Fix them.
+1. **Placeholder scan:** Any "TBD", "TODO", incomplete sections, or vague requirements?
 2. **Internal consistency:** Do any sections contradict each other? Does the architecture match the feature descriptions?
 3. **Scope check:** Is this focused enough for a single implementation plan, or does it need decomposition?
-4. **Ambiguity check:** Could any requirement be interpreted two different ways? If so, pick one and make it explicit.
+4. **Ambiguity check:** Could any requirement be interpreted two different ways?
 
-Fix any issues inline. No need to re-review — just fix and move on.
+For each issue found, classify it:
+
+- **Self-resolvable:** The answer follows unambiguously from what the user already told you (a missing diagram label, an implied constraint that isn't written down). Fix it inline.
+- **Requires user input:** The answer involves a preference, a trade-off, or a decision the user hasn't made yet. **Do not guess. Do not pick one and move on.** Ask the user.
+
+<HARD-GATE>
+Do NOT proceed to the User Review Gate with any unresolved ambiguity, placeholder, or contradiction. Every open question must be answered — either by you (if self-resolvable) or by the user (if it requires their input). A spec with deferred decisions is not a spec.
+</HARD-GATE>
+
+If user input is needed, present all open questions together in a single message (not one at a time — the user has already been through the question phase). Once answered, update the spec and re-run the self-review before proceeding.
 
 **User Review Gate:**
 After the spec review loop passes, ask the user to review the written spec before proceeding:
