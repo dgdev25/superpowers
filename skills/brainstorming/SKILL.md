@@ -76,6 +76,18 @@ digraph brainstorming {
 
 ## The Process
 
+**Critical Thinking — applied throughout:**
+
+Before accepting the user's framing, challenge it. The user describes what they think they want; your job is to find out what they actually need.
+
+- **Challenge the problem statement first** — Is the stated problem the real problem? Is the proposed solution solving the right thing? A user who asks for a cache may need a faster query. A user who asks for a notification system may need a better onboarding flow. Ask "why" before "how".
+- **Identify hidden assumptions** — What is the user taking for granted that might not be true? What constraints have they assumed that may not apply? Surface these before they become load-bearing decisions.
+- **Stress-test every approach** — For each proposed approach, actively look for failure modes, not just benefits. What breaks under load? What breaks when requirements change? What does this make harder six months from now?
+- **Reject false trade-offs** — If two approaches both have fatal flaws, say so. Don't present a bad option just to fill the "2-3 approaches" requirement.
+- **Challenge the design before approving it** — If something in the design looks wrong, underspecified, or likely to cause pain at implementation time, raise it — even if the user hasn't asked.
+
+This is not adversarial. It is the difference between a rubber stamp and a collaborator.
+
 **Understanding the idea:**
 
 - Check out the current project state first (files, docs, recent commits)
@@ -90,6 +102,8 @@ digraph brainstorming {
 - Propose 2-3 different approaches with trade-offs
 - Present options conversationally with your recommendation and reasoning
 - Lead with your recommended option and explain why
+- For each approach, actively name its failure modes — not just its benefits. What will go wrong with this choice? Under what conditions does it break down?
+- If an approach has a fatal flaw, say so plainly rather than listing it as a neutral option
 - For each approach, follow immediately with a tech stack recommendation (see Tech Stack Recommendations below)
 
 **Presenting the design:**
@@ -172,6 +186,7 @@ After writing the spec document, look at it with fresh eyes:
 2. **Internal consistency:** Do any sections contradict each other? Does the architecture match the feature descriptions?
 3. **Scope check:** Is this focused enough for a single implementation plan, or does it need decomposition?
 4. **Ambiguity check:** Could any requirement be interpreted two different ways?
+5. **Critical thinking check:** Does this design actually solve the stated problem? Are there hidden assumptions that could invalidate the approach? Are there obvious failure modes the spec doesn't address?
 
 For each issue found, classify it:
 
@@ -233,6 +248,7 @@ Once all ADRs are created, report to the user: "Created N ADRs: [titles]. Procee
 
 ## Key Principles
 
+- **Critical thinking always** - Challenge the problem statement, stress-test approaches, and question the design — not just execute on what is asked
 - **One question at a time** - Don't overwhelm with multiple questions
 - **Multiple choice preferred** - Easier to answer than open-ended when possible
 - **YAGNI ruthlessly** - Remove unnecessary features from all designs
