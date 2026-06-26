@@ -25,13 +25,14 @@ You MUST create a task for each of these items and complete them in order:
 2. **Offer the visual companion just-in-time** — NOT upfront. The first time a question would genuinely be clearer shown than described, offer it then (its own message); on approval its browser tab opens for you. If no visual question ever arises, never offer it. See the Visual Companion section below.
 3. **Ask clarifying questions** — one at a time, understand purpose/constraints/success criteria
 4. **Propose 2-3 approaches** — with trade-offs and your recommendation
-5. **Present design** — in sections scaled to their complexity, get user approval after each section
-6. **Write design doc** — save to `docs/superpowers/specs/YYYY-MM-DD-<topic>-design.md` and commit
-7. **Spec self-review** — quick inline check for placeholders, contradictions, ambiguity, scope (see below)
-8. **User reviews written spec** — ask user to review the spec file before proceeding
-9. **Security review** — offer to threat-model the spec before implementation locks in architecture (see Security Review below)
-10. **Extract and create ADRs** — scan approved spec for architectural decisions, offer them to the user, create selected ones (see ADR Extraction below)
-11. **Transition to implementation** — invoke writing-plans skill to create implementation plan
+5. **Recommend tech stack** — for each approach, recommend specific technologies and their latest versions (see Tech Stack Recommendations below)
+6. **Present design** — in sections scaled to their complexity, get user approval after each section
+7. **Write design doc** — save to `docs/superpowers/specs/YYYY-MM-DD-<topic>-design.md` and commit
+8. **Spec self-review** — quick inline check for placeholders, contradictions, ambiguity, scope (see below)
+9. **User reviews written spec** — ask user to review the spec file before proceeding
+10. **Security review** — offer to threat-model the spec before implementation locks in architecture (see Security Review below)
+11. **Extract and create ADRs** — scan approved spec for architectural decisions, offer them to the user, create selected ones (see ADR Extraction below)
+12. **Transition to implementation** — invoke writing-plans skill to create implementation plan
 
 ## Process Flow
 
@@ -93,6 +94,7 @@ digraph brainstorming {
 - Propose 2-3 different approaches with trade-offs
 - Present options conversationally with your recommendation and reasoning
 - Lead with your recommended option and explain why
+- For each approach, follow immediately with a tech stack recommendation (see Tech Stack Recommendations below)
 
 **Presenting the design:**
 
@@ -114,6 +116,43 @@ digraph brainstorming {
 - Explore the current structure before proposing changes. Follow existing patterns.
 - Where existing code has problems that affect the work (e.g., a file that's grown too large, unclear boundaries, tangled responsibilities), include targeted improvements as part of the design - the way a good developer improves code they're working in.
 - Don't propose unrelated refactoring. Stay focused on what serves the current goal.
+
+## Tech Stack Recommendations
+
+For each proposed approach, recommend the specific technologies that best fit it. This is not a generic list — it must be matched to the approach's constraints and trade-offs.
+
+**Always recommend the latest stable version.** Never recommend an outdated version because it is familiar or because training data skews toward it.
+
+<HARD-GATE>
+If you are not certain what the latest stable version of a technology is, you MUST perform a web search before making the recommendation. Do not guess. Do not rely on training data for version numbers — it is always potentially stale. A recommendation with a wrong version is worse than no recommendation.
+</HARD-GATE>
+
+**What to cover per approach:**
+
+- **Language/runtime** — with version (e.g., Node.js 22 LTS, Python 3.13, Go 1.23)
+- **Framework** — with version (e.g., Next.js 15, FastAPI 0.115, Django 5.1)
+- **Database** — with version and rationale for the choice
+- **Key libraries** — only those central to the architecture, with versions
+- **Tooling** — package manager, build tool, test runner (with versions where relevant)
+
+**Format per approach:**
+
+> **Approach 1 — [name]**
+> Stack: Next.js 15 (React 19) · TypeScript 5.7 · PostgreSQL 17 · Prisma 6 · Vitest 2
+> Rationale: [one sentence on why this stack fits this approach]
+
+**Greenfield vs existing codebase:**
+
+- **Greenfield:** Recommend the stack freely based on the best fit for the problem.
+- **Existing codebase:** The existing stack is a hard constraint. Recommend additions or upgrades only — never suggest replacing a core technology that is already in use unless the user has explicitly raised it as a problem.
+
+**Version sources (in order of reliability):**
+
+1. Official release pages / changelogs (search: `[technology] latest stable release`)
+2. Package registry (npmjs.com, pypi.org, crates.io, pkg.go.dev)
+3. GitHub releases tab for the project
+
+If a web search returns conflicting information, prefer the official project source over third-party articles.
 
 ## After the Design
 
