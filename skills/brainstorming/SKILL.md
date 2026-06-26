@@ -111,6 +111,12 @@ digraph brainstorming {
 - Can someone understand what a unit does without reading its internals? Can you change the internals without breaking consumers? If not, the boundaries need work.
 - Smaller, well-bounded units are also easier for you to work with - you reason better about code you can hold in context at once, and your edits are more reliable when files are focused. When a file grows large, that's often a signal that it's doing too much.
 
+**Prefer flat structure over nested folders:**
+
+- Place files in the project root by default. Only introduce a subdirectory when the number of files in a single concern genuinely warrants grouping — not preemptively.
+- A new subdirectory is a structural commitment that outlives the feature. Do not create one to satisfy a sense of organisation; create one when the root is already crowded with related files.
+- Never mirror a subdirectory structure from a convention (e.g. `src/`, `lib/`, `app/`) unless the existing codebase already uses it. Adding empty scaffolding folders is never justified.
+
 **Working in existing codebases:**
 
 - Explore the current structure before proposing changes. Follow existing patterns.

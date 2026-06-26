@@ -31,6 +31,12 @@ Before defining tasks, map out which files will be created or modified and what 
 - Files that change together should live together. Split by responsibility, not by technical layer.
 - In existing codebases, follow established patterns. If the codebase uses large files, don't unilaterally restructure - but if a file you're modifying has grown unwieldy, including a split in the plan is reasonable.
 
+**Flat first — no speculative subdirectories:**
+
+- Default to placing new files in the project root. Do not create subdirectories preemptively or to mirror a convention (`src/`, `lib/`, `app/`, etc.) unless the existing codebase already uses that structure.
+- Only introduce a subdirectory when multiple files of the same concern already exist and grouping them reduces clutter. A single file does not justify a folder.
+- If in doubt, root. Directories can always be added later; removing them requires renaming imports across the codebase.
+
 This structure informs the task decomposition. Each task should produce self-contained changes that make sense independently.
 
 ## Task Right-Sizing
