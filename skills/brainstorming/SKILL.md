@@ -31,7 +31,7 @@ You MUST create a task for each of these items and complete them in order:
 8. **Spec self-review** — quick inline check for placeholders, contradictions, ambiguity, scope (see below)
 9. **User reviews written spec** — ask user to review the spec file before proceeding
 10. **Security review** — offer to threat-model the spec before implementation locks in architecture (see Security Review below)
-11. **Extract and create ADRs** — scan approved spec for architectural decisions, offer them to the user, create selected ones (see ADR Extraction below)
+11. **Extract and create ADRs** — scan approved spec for architectural decisions and create an ADR for every qualifying decision — this step is mandatory (see ADR Extraction below)
 12. **Transition to implementation** — invoke writing-plans skill to create implementation plan
 
 ## Process Flow
@@ -62,15 +62,12 @@ digraph brainstorming {
     "Security review accepted?" [shape=diamond];
     "Invoke security-review skill" [shape=box];
     "Extract ADR candidates" [shape=box];
-    "User selects ADRs to create?" [shape=diamond];
     "Create ADRs" [shape=box];
     "Offer security review" -> "Security review accepted?";
     "Security review accepted?" -> "Invoke security-review skill" [label="yes"];
     "Security review accepted?" -> "Extract ADR candidates" [label="skip"];
     "Invoke security-review skill" -> "Extract ADR candidates";
-    "Extract ADR candidates" -> "User selects ADRs to create?";
-    "User selects ADRs to create?" -> "Create ADRs" [label="yes"];
-    "User selects ADRs to create?" -> "Invoke writing-plans skill" [label="skip"];
+    "Extract ADR candidates" -> "Create ADRs";
     "Create ADRs" -> "Invoke writing-plans skill";
 }
 ```
@@ -209,7 +206,11 @@ If declined or the design has no sensitive data or auth requirements, skip and p
 
 **ADR Extraction:**
 
-After spec approval, scan the spec document for architectural decisions — choices where alternatives existed and a specific option was selected for explicit reasons. These are the things worth capturing as ADRs.
+After spec approval, scan the spec document for architectural decisions and create an ADR for every qualifying decision. This step is not optional — do not ask the user whether to create ADRs, and do not skip it.
+
+<HARD-GATE>
+Every qualifying architectural decision MUST have an ADR created before proceeding to writing-plans. Do not present a list and ask for confirmation. Do not offer a skip path. Identify the decisions, create the ADRs, report what was created.
+</HARD-GATE>
 
 What qualifies as a decision:
 - Technology or library choices with trade-offs ("use Postgres over SQLite because...")
@@ -222,16 +223,9 @@ What does NOT qualify:
 - Implementation details with no real alternatives
 - "TBD" items or deferred choices
 
-Present candidates as a numbered list — one sentence each:
+Invoke `ruflo-adr:adr-create` for each qualifying decision, passing the title, context, decision, and alternatives from the spec. If `ruflo-adr` is not available, write ADR files manually to `docs/decisions/NNNN-<slug>.md` using the MADR format (Status / Context / Decision / Consequences).
 
-> "I found 3 architectural decisions in the spec. Would you like ADRs for any of these?
-> 1. Use PostgreSQL over SQLite (multi-tenancy, concurrent writes)
-> 2. Event-driven architecture over direct service calls (decoupling, auditability)
-> 3. JWT stateless auth over sessions (horizontal scaling)
->
-> Reply with numbers to create (e.g. '1 3'), 'all', or 'skip'."
-
-On confirmation, invoke `ruflo-adr:adr-create` for each selected decision, passing the title, context, decision, and alternatives from the spec. If `ruflo-adr` is not available, write ADR files manually to `docs/decisions/NNNN-<slug>.md` using the MADR format (Status / Context / Decision / Consequences).
+Once all ADRs are created, report to the user: "Created N ADRs: [titles]. Proceeding to implementation plan."
 
 **Implementation:**
 
